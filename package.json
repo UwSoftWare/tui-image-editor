@@ -1,11 +1,11 @@
 {
-  "name": "tui-image-editor",
-  "author": "NHN FE Development Lab <dl_javascript@nhn.com>",
-  "version": "3.8.0",
+  "name": "@sabinayakc/tui-image-editor",
+  "author": "Sabinaya KC <kc.sabinaya@gmail.com>",
+  "version": "1.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nhn/tui.image-editor.git"
+    "url": "https://github.com/sabinayakc/tui.image-editor.git"
   },
   "main": "dist/tui-image-editor.js",
   "files": [
