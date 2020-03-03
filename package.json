@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/sabinayakc/tui.image-editor.git"
   },
-  "main": "dist/tui-image-editor.js",
+  "main": "dist/@sabinayakc/tui-image-editor.js",
   "files": [
     "src",
     "dist",
