@@ -18,15 +18,7 @@ describe('UI', () => {
             },
             menu: ['crop', 'flip', 'rotate', 'draw', 'shape', 'icon', 'text', 'mask', 'filter'],
             initMenu: 'shape',
-            menuBarPosition: 'bottom',
-            theme: {
-                'menu.normalIcon.path': 'base/test/fixtures/icon-d.svg',
-                'menu.activeIcon.path': 'base/test/fixtures/icon-b.svg',
-                'menu.disabledIcon.path': 'base/test/fixtures/icon-a.svg',
-                'menu.hoverIcon.path': 'base/test/fixtures/icon-c.svg',
-                'submenu.normalIcon.path': 'base/test/fixtures/icon-d.svg',
-                'submenu.activeIcon.path': 'base/test/fixtures/icon-c.svg'
-            }
+            menuBarPosition: 'bottom'
         };
         ui = new UI(document.createElement('div'), uiOptions, {});
     });
@@ -149,7 +141,7 @@ describe('UI', () => {
     describe('_setEditorPosition()', () => {
         beforeEach(() => {
             ui._editorElement = document.createElement('div');
-            spyOn(ui, '_getEditorDimension').and.returnValue({
+            spyOn(ui, '_getCanvasMaxDimension').and.returnValue({
                 width: 300,
                 height: 300
             });
