@@ -1560,6 +1560,38 @@ class ImageEditor {
     setObjectPosition(id, posInfo) {
         return this.execute(commands.SET_OBJECT_POSITION, id, posInfo);
     }
+
+    /**
+     * @param {string} type - 'zoom' or 'setValue'
+     * @param {number} scale - Zoom settings of image
+     * @param {boolean} reset - Zoom Scale Value
+     * @returns {Promise<RotateStatus, ErrorMsg>}
+     * @private
+     */
+    _zoom(type, scale, reset) {
+        return this.execute(commands.ZOOM_IMAGE, type, scale, reset);
+    }
+
+    /**
+     * Zoom image
+     * @returns {Promise}
+     * @param {object} settings - Additional settings to zoom image
+     * @returns {Promise<RotateStatus, ErrorMsg>}
+     */
+    zoom(settings) {
+        return this._zoom('zoom', settings);
+    }
+
+    /**
+     * Set Zoom
+     * @param {number} scale - Zoom settings of image
+     * @param {boolean} reset - Zoom Scale Value
+     * @returns {Promise<RotateStatus, ErrorMsg>}
+     * @example
+    **/
+    setZoom(scale, reset = false) {
+        return this._zoom('setZoomValue', scale, reset);
+    }
 }
 
 action.mixin(ImageEditor);

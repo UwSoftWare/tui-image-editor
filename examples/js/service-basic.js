@@ -41,6 +41,8 @@ var $btnImageFilter = $('#btn-image-filter');
 var $btnLoadMaskImage = $('#input-mask-image-file');
 var $btnApplyMask = $('#btn-apply-mask');
 var $btnClose = $('.close');
+var $btnZoom = $('#btn-zoom');
+var $btnZoomReset = $('#btn-reset-zoom');
 
 // Input etc.
 var $inputRotationRange = $('#input-rotation-range');
@@ -70,7 +72,7 @@ var $inputCheckMultiply = $('#input-check-multiply');
 var $inputCheckBlend = $('#input-check-blend');
 var $inputCheckColorFilter = $('#input-check-color-filter');
 var $inputRangeColorFilterValue = $('#input-range-color-filter-value');
-
+var $inputZoomRange = $('#input-zoom-range');
 // Sub menus
 var $displayingSubMenu = $();
 var $cropSubMenu = $('#crop-sub-menu');
@@ -83,6 +85,7 @@ var $textSubMenu = $('#text-sub-menu');
 var $iconSubMenu = $('#icon-sub-menu');
 var $filterSubMenu = $('#filter-sub-menu');
 var $imageFilterSubMenu = $('#image-filter-sub-menu');
+var $zoomSubMenu = $('#zoom-sub-menu');
 
 // Select line type
 var $selectLine = $('[name="select-line-type"]');
@@ -354,7 +357,7 @@ $btnUndo.on('click', function() {
     $displayingSubMenu.hide();
 
     if (!$(this).hasClass('disabled')) {
-        imageEditor.undo();
+        imageEditor.undo().then(value => console.log(value));
     }
 });
 
@@ -362,13 +365,14 @@ $btnRedo.on('click', function() {
     $displayingSubMenu.hide();
 
     if (!$(this).hasClass('disabled')) {
-        imageEditor.redo();
+        imageEditor.redo().then(value => console.log(value));
     }
 });
 
 $btnClearObjects.on('click', function() {
     $displayingSubMenu.hide();
     imageEditor.clearObjects();
+    imageEditor.setZoom(1, true);
 });
 
 $btnRemoveActiveObject.on('click', function() {
@@ -442,6 +446,16 @@ $btnRotateCounterClockWise.on('click', function() {
     imageEditor.rotate(-30);
 });
 
+$btnZoom.on('click', function() {
+    imageEditor.stopDrawingMode();
+    $displayingSubMenu.hide();
+    $displayingSubMenu = $zoomSubMenu.show();
+});
+
+$btnZoomReset.on('click', function() {
+    imageEditor.setZoom(1, true);
+});
+
 $inputRotationRange.on('mousedown', function() {
     var changeAngle = function() {
         imageEditor.setAngle(parseInt($inputRotationRange.val(), 10))['catch'](function() {});
@@ -461,6 +475,10 @@ $inputBrushWidthRange.on('change', function() {
     imageEditor.setBrush({width: parseInt(this.value, 10)});
 });
 
+$inputZoomRange.on('change', function() {
+    imageEditor.setZoom(parseFloat($inputZoomRange.val()));
+});
+
 $inputImage.on('change', function(event) {
     var file;
 
@@ -470,6 +488,7 @@ $inputImage.on('change', function(event) {
 
     file = event.target.files[0];
     imageEditor.loadImageFromFile(file).then(function(result) {
+        // eslint-disable-next-line no-console
         console.log(result);
         imageEditor.clearUndoStack();
     });
@@ -866,7 +885,7 @@ $inputCheckMultiply.on('change', function() {
     });
 });
 
-multiplyColorpicker.on('selectColor', function() {
+multiplyColorpicker.on('selectColor', function(e) {
     applyOrRemoveFilter($inputCheckMultiply.is(':checked'), 'multiply', {
         color: e.color
     });

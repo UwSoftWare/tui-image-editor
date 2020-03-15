@@ -74,6 +74,39 @@ class Invoker {
     }
 
     /**
+     * Invoke Redo execution
+     * @param {Command} command - Command
+     * @returns {Promise}
+     * @private
+     */
+    _invokeRedo(command) {
+        this.lock();
+
+        let {args} = command;
+        if (!args) {
+            args = [];
+        }
+
+        return command.execute(...args)
+            .then(value => {
+                if (!this._isSilent) {
+                    this.pushUndoStack(command);
+                }
+                this.unlock();
+                if (isFunction(command.executeCallback)) {
+                    command.executeCallback(value);
+                }
+
+                return {type: command.name,
+                    data: command.undoData};
+            })['catch'](message => {
+                this.unlock();
+
+                return Promise.reject(message);
+            });
+    }
+
+    /**
      * Invoke command undo
      * @param {Command} command - Command
      * @returns {Promise}
@@ -95,7 +128,8 @@ class Invoker {
                     command.undoCallback(value);
                 }
 
-                return value;
+                return {type: command.name,
+                    data: command.undoData};
             })['catch'](message => {
                 this.unlock();
 
@@ -213,7 +247,7 @@ class Invoker {
             if (this.isEmptyRedoStack()) {
                 this._fireRedoStackChanged();
             }
-            promise = this._invokeExecution(command);
+            promise = this._invokeRedo(command);
         } else {
             message = rejectMessages.redo;
             if (this._isLocked) {

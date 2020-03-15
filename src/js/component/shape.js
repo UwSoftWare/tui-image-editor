@@ -24,7 +24,7 @@ const DEFAULT_TYPE = 'rect';
 const DEFAULT_WIDTH = 20;
 const DEFAULT_HEIGHT = 20;
 
-const shapeType = ['rect', 'circle', 'triangle'];
+const shapeType = ['rect', 'circle', 'triangle', 'arrow'];
 
 /**
  * Shape
@@ -236,6 +236,9 @@ class Shape extends Component {
             case 'triangle':
                 instance = new fabric.Triangle(options);
                 break;
+            case 'arrow':
+                instance = this._createArrow(options.startX, options.startY, options.endX, options.endY, options);
+                break;
             default:
                 instance = {};
         }
@@ -340,7 +343,7 @@ class Shape extends Component {
         const height = startPointY - pointer.y;
         const shape = this._shapeObj;
 
-        if (!shape) {
+        if (!shape && this._type !== 'arrow') {
             this.add(this._type, {
                 left: startPointX,
                 top: startPointY,
@@ -349,7 +352,7 @@ class Shape extends Component {
             }).then(objectProps => {
                 this.fire(eventNames.ADD_OBJECT, objectProps);
             });
-        } else {
+        } else if (this._type !== 'arrow') {
             this._shapeObj.set({
                 isRegular: this._withShiftKey
             });
@@ -361,21 +364,35 @@ class Shape extends Component {
 
     /**
      * MouseUp event handler on canvas
+     * @param {{target: fabric.Object, e: MouseEvent}} fEvent - Fabric event object
      * @private
      */
-    _onFabricMouseUp() {
+    _onFabricMouseUp(fEvent) {
         const canvas = this.getCanvas();
         const startPointX = this._startPoint.x;
         const startPointY = this._startPoint.y;
         const shape = this._shapeObj;
-
+        const pointer = canvas.getPointer(fEvent.e);
         if (!shape) {
-            this.add(this._type, {
-                left: startPointX,
-                top: startPointY,
-                width: DEFAULT_WIDTH,
-                height: DEFAULT_HEIGHT
-            }).then(objectProps => {
+            let data = {};
+            if (this._type === 'arrow') {
+                data = {
+                    startX: this._startPoint.x,
+                    startY: this._startPoint.y,
+                    endX: pointer.x,
+                    endY: pointer.y,
+                    originX: 'left',
+                    originY: 'top'
+                };
+            } else {
+                data = {
+                    left: startPointX,
+                    top: startPointY,
+                    width: DEFAULT_WIDTH,
+                    height: DEFAULT_HEIGHT
+                };
+            }
+            this.add(this._type, data).then(objectProps => {
                 this.fire(eventNames.ADD_OBJECT, objectProps);
             });
         } else if (shape) {
@@ -417,6 +434,58 @@ class Shape extends Component {
                 this._shapeObj.isRegular = false;
             }
         }
+    }
+
+    /**
+     * Create an Arrow shape using Polyline 
+     * @param {object} fromx - Starting X Coordinate
+     * @param {object} fromy - Starting Y Coordinate
+     * @param {object} tox - Ending X Coordinate
+     * @param {object} toy - Ending Y Coordinate
+     * @param {object} options - Arrow options
+     * @returns {fabric.Polyline} Fabric Polyline
+     * @private
+     */
+    _createArrow(fromx, fromy, tox, toy, options) {
+        const angle = Math.atan2(toy - fromy, tox - fromx);
+        const headlen = 15;
+        // bring the line end back some to account for arrow head.
+        tox = tox - (headlen * Math.cos(angle));
+        toy = toy - (headlen * Math.sin(angle));
+        // calculate the points.
+        const points = [
+            {
+                x: fromx,
+                y: fromy
+            }, {
+                x: fromx - ((headlen / 4) * (Math.cos(angle - (Math.PI / 2)))),
+                y: fromy - ((headlen / 4) * (Math.sin(angle - (Math.PI / 2))))
+            }, {
+                x: tox - ((headlen / 4) * (Math.cos(angle - (Math.PI / 2)))),
+                y: toy - ((headlen / 4) * (Math.sin(angle - (Math.PI / 2))))
+            }, {
+                x: tox - ((headlen) * (Math.cos(angle - (Math.PI / 2)))),
+                y: toy - ((headlen) * (Math.sin(angle - (Math.PI / 2))))
+            }, {
+                x: tox + ((headlen) * Math.cos(angle)),
+                y: toy + ((headlen) * Math.sin(angle))
+            }, {
+                x: tox - ((headlen) * (Math.cos(angle + (Math.PI / 2)))),
+                y: toy - ((headlen) * (Math.sin(angle + (Math.PI / 2))))
+            }, {
+                x: tox - ((headlen / 4) * (Math.cos(angle + (Math.PI / 2)))),
+                y: toy - ((headlen / 4) * (Math.sin(angle + (Math.PI / 2))))
+            }, {
+                x: fromx - ((headlen / 4) * (Math.cos(angle + (Math.PI / 2)))),
+                y: fromy - ((headlen / 4) * (Math.sin(angle + (Math.PI / 2))))
+            }, {
+                x: fromx,
+                y: fromy
+            }
+        ];
+        const pline = new fabric.Polyline(points, options);
+
+        return pline;
     }
 }
 

@@ -20,7 +20,8 @@ export default {
             mask: this._maskAction(),
             draw: this._drawAction(),
             icon: this._iconAction(),
-            filter: this._filterAction()
+            filter: this._filterAction(),
+            zoom: this._zoomAction()
         };
     },
 
@@ -543,6 +544,24 @@ export default {
         };
     },
 
+      /**
+     * Zoom Action
+     * @returns {Object} actions for ui zoom
+     * @private
+     */
+    _zoomAction() {
+        return extend({
+            zoom: value => {
+                this.zoom(value);
+                this.ui.resizeEditor();
+            },
+            setZoomValue: value => {
+                this.setZoomValue(value);
+                this.ui.resizeEditor();
+            }
+        }, this._commonAction());
+    },
+    
     /**
      * Mixin
      * @param {ImageEditor} ImageEditor instance

@@ -50,7 +50,8 @@ module.exports = {
         'TEXT',
         'ICON',
         'FILTER',
-        'SHAPE'
+        'SHAPE',
+        'ZOOM'
     ),
 
     /**
@@ -76,7 +77,8 @@ module.exports = {
         'ADD_IMAGE_OBJECT': 'addImageObject',
         'RESIZE_CANVAS_DIMENSION': 'resizeCanvasDimension',
         'SET_OBJECT_PROPERTIES': 'setObjectProperties',
-        'SET_OBJECT_POSITION': 'setObjectPosition'
+        'SET_OBJECT_POSITION': 'setObjectPosition',
+        'ZOOM_IMAGE': 'zoom'
     },
 
     /**
@@ -168,7 +170,8 @@ module.exports = {
         rotation: 'The current angle is same the old angle.',
         undo: 'The promise of undo command is reject.',
         unsupportedOperation: 'Unsupported operation.',
-        unsupportedType: 'Unsupported object type.'
+        unsupportedType: 'Unsupported object type.',
+        zoom: 'The current value is same as the old value.'
     },
 
     /**
@@ -255,5 +258,12 @@ module.exports = {
             value: 0.2,
             useDecimal: true
         }
+    },
+
+    defaultZoomRangeValus: {
+        realTimeEvent: true,
+        min: 1,
+        max: 20,
+        value: 1
     }
 };
