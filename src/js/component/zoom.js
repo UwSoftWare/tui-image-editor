@@ -83,9 +83,7 @@ class Zoom extends Component {
     resetCanvas() {
         const canvas = this.getCanvas();
         if (this._didPan) {
-            canvas.absolutePan(
-                new fabric.Point(0, 0)
-            );
+            canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         }
         this._didPan = false;
         canvas.setZoom(1);
@@ -146,18 +144,18 @@ class Zoom extends Component {
                 canvas.viewportTransform[5] += fEvent.e.clientY - canvas.lastPosY;
                 if (canvas.viewportTransform[4] >= 0) {
                     canvas.viewportTransform[4] = 0;
-                } else if (canvas.viewportTransform[4] < (wrapperWidth - (wrapperWidth * zoom)) * 2.3) {
-                    canvas.viewportTransform[4] = (wrapperWidth - (wrapperWidth * zoom)) * 2.3;
+                } else if (canvas.viewportTransform[4] < (wrapperWidth - (wrapperWidth * zoom)) * 2) {
+                    canvas.viewportTransform[4] = (wrapperWidth - (wrapperWidth * zoom)) * 2;
                 }
                 if (canvas.viewportTransform[5] >= 0) {
                     canvas.viewportTransform[5] = 0;
-                } else if (canvas.viewportTransform[5] < (wrapperHeight - (wrapperHeight * zoom)) * 2.3) {
-                    canvas.viewportTransform[5] = (wrapperHeight - (wrapperHeight * zoom)) * 2.3;
+                } else if (canvas.viewportTransform[5] < (wrapperHeight - (wrapperHeight * zoom)) * 2) {
+                    canvas.viewportTransform[5] = (wrapperHeight - (wrapperHeight * zoom)) * 2;
                 }
             }
             // eslint-disable-next-line no-console
-            console.log(canvas.viewportTransform, wrapperHeight, (wrapperHeight * zoom),
-                fEvent.e.clientX - canvas.lastPosX);
+            // console.log(canvas.viewportTransform, wrapperWidth, (wrapperWidth * zoom),  (wrapperWidth * zoom) - wr
+            //   fEvent.e.clientX - canvas.lastPosX);
             this._didPan = true;
             canvas.renderAll();
             canvas.lastPosX = fEvent.e.clientX;

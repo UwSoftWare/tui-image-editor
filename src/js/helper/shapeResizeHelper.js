@@ -19,6 +19,10 @@ const DIMENSION_KEYS = {
     triangle: {
         w: 'width',
         h: 'height'
+    },
+    polyline: {
+        w: 'width',
+        h: 'height'
     }
 };
 
@@ -100,7 +104,7 @@ function adjustOriginByStartPoint(pointer, shape) {
  * @ignore
  */
 function adjustOriginByMovingPointer(pointer, shape) {
-    const origin = shape.startPoint;
+    const origin = shape.startPoint || new fabric.Point(shape.startX, shape.startY);
     const angle = -shape.angle;
     const originPositions = getPositionsOfRotatedOrigin(origin, pointer, angle);
     const {originX, originY} = originPositions;
@@ -119,25 +123,24 @@ function adjustDimensionOnScaling(shape) {
     const dimensionKeys = DIMENSION_KEYS[type];
     let width = shape[dimensionKeys.w] * scaleX;
     let height = shape[dimensionKeys.h] * scaleY;
+    const isArrow = !!(shape.type === 'polyline');
+    if (!isArrow) {
+        if (shape.isRegular) {
+            const maxScale = Math.max(scaleX, scaleY);
 
-    if (shape.isRegular) {
-        const maxScale = Math.max(scaleX, scaleY);
-
-        width = shape[dimensionKeys.w] * maxScale;
-        height = shape[dimensionKeys.h] * maxScale;
+            width = shape[dimensionKeys.w] * maxScale;
+            height = shape[dimensionKeys.h] * maxScale;
+        }
+        const options = {
+            hasControls: false,
+            hasBorders: false,
+            scaleX: 1,
+            scaleY: 1
+        };
+        options[dimensionKeys.w] = width;
+        options[dimensionKeys.h] = height;
+        shape.set(options);
     }
-
-    const options = {
-        hasControls: false,
-        hasBorders: false,
-        scaleX: 1,
-        scaleY: 1
-    };
-
-    options[dimensionKeys.w] = width;
-    options[dimensionKeys.h] = height;
-
-    shape.set(options);
 }
 
 /**

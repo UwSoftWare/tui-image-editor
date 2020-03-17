@@ -22,7 +22,7 @@ const command = {
     execute(graphics, type, scale, reset) {
         const zoomComp = graphics.getComponent(ZOOM);
 
-        this.undoData.settings = zoomComp.getCurrentValue();
+        this.undoData.zoom = zoomComp.getCurrentValue();
 
         return zoomComp[type](scale, reset);
     },
@@ -33,7 +33,7 @@ const command = {
     undo(graphics) {
         const zoomComp = graphics.getComponent(ZOOM);
 
-        return zoomComp.setZoomValue(this.undoData.settings);
+        return zoomComp.setZoomValue(this.undoData.zoom);
     }
 };
 

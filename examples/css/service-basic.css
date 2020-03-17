@@ -2,7 +2,7 @@
     border: 1px solid black;
 }
 .body-container {
-    width: 1000px;
+    /* width: 1000px; */
 }
 .tui-image-editor-controls {
     min-height: 250px;
