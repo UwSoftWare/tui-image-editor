@@ -453,7 +453,7 @@ $btnZoom.on('click', function() {
 });
 
 $btnZoomReset.on('click', function() {
-    imageEditor.setZoom(1, true);
+    imageEditor.setZoom(1, true, [parseFloat($inputZoomRange.val()), 0, 0, parseFloat($inputZoomRange.val()), 0, 0]);
 });
 
 $inputRotationRange.on('mousedown', function() {

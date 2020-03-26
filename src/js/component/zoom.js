@@ -62,15 +62,16 @@ class Zoom extends Component {
      * Set zoom value of the image
      * @param {number} scale - Zoom Scale Value
      * @param {boolean} reset - Zoom Scale Value
+     * @param {Array} transform - Zoom Transform Value
      * @returns {jQuery.Deferred}
      */
-    setZoomValue(scale, reset) {
+    setZoomValue(scale, reset, transform) {
         if (!reset) {
             this._zoomScale = scale;
             this._zoomCanvas();
         } else {
             this._zoomScale = 1;
-            this.resetCanvas();
+            this.resetCanvas(transform);
         }
 
         return Promise.resolve();
@@ -78,12 +79,16 @@ class Zoom extends Component {
 
     /**
      * Reset ViewPort
-     * @param {object} viewportTransform - Scale Value to Zoom in our Zoom out
+     * @param {Array} transform - Zoom Transform Value
      * @private
      */
-    resetCanvas() {
+    resetCanvas(transform) {
         const canvas = this.getCanvas();
-        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        if (transform) {
+            canvas.setViewportTransform(transform);
+        } else {
+            canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        }
         this._didPan = false;
     }
 
@@ -138,6 +143,9 @@ class Zoom extends Component {
         const canvas = this.getCanvas();
         if (canvas.isDragging) {
             const diffX = fEvent.e.clientX - canvas.lastPosX;
+            if (canvas.vptCoords.br.x > canvas.width) {
+                canvas.viewportTransform[4] -= diffX;
+            }
             if (canvas.vptCoords.br.x < canvas.width || diffX > 0) {
                 canvas.viewportTransform[4] += diffX;
             }
@@ -145,6 +153,9 @@ class Zoom extends Component {
                 canvas.viewportTransform[4] = 0;
             }
             const diffY = fEvent.e.clientY - canvas.lastPosY;
+            if (canvas.vptCoords.br.y > canvas.height) {
+                canvas.viewportTransform[5] -= diffY;
+            }
             if (canvas.vptCoords.br.y < canvas.height || diffY > 0) {
                 canvas.viewportTransform[5] += diffY;
             }

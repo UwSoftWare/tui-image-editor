@@ -1565,11 +1565,12 @@ class ImageEditor {
      * @param {string} type - 'zoom' or 'setValue'
      * @param {number} scale - Zoom settings of image
      * @param {boolean} reset - Zoom Scale Value
+     * @param {Array} transform - Zoom Transform Value
      * @returns {Promise<RotateStatus, ErrorMsg>}
      * @private
      */
-    _zoom(type, scale, reset) {
-        return this.execute(commands.ZOOM_IMAGE, type, scale, reset);
+    _zoom(type, scale, reset, transform) {
+        return this.execute(commands.ZOOM_IMAGE, type, scale, reset, transform);
     }
 
     /**
@@ -1586,11 +1587,12 @@ class ImageEditor {
      * Set Zoom
      * @param {number} scale - Zoom settings of image
      * @param {boolean} reset - Zoom Scale Value
+     * @param {Array} transform - Zoom Transform Value
      * @returns {Promise<RotateStatus, ErrorMsg>}
      * @example
     **/
-    setZoom(scale, reset = false) {
-        return this._zoom('setZoomValue', scale, reset);
+    setZoom(scale, reset = false, transform = null) {
+        return this._zoom('setZoomValue', scale, reset, transform);
     }
 }
 

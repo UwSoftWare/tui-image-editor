@@ -17,14 +17,15 @@ const command = {
      * @param {string} type - 'zoom' or 'setZoomValue'
      * @param {number} scale - zoom scale
      * @param {boolean} reset - zoom reset
+     * @param {Array} transform - Zoom Transform Value
      * @returns {Promise}
      */
-    execute(graphics, type, scale, reset) {
+    execute(graphics, type, scale, reset, transform) {
         const zoomComp = graphics.getComponent(ZOOM);
 
         this.undoData.zoom = zoomComp.getCurrentValue();
 
-        return zoomComp[type](scale, reset);
+        return zoomComp[type](scale, reset, transform);
     },
     /**
      * @param {Graphics} graphics - Graphics instance
