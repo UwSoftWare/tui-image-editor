@@ -34,6 +34,7 @@ class Zoom extends Component {
          * @private
          */
         this._zoomScale = 1;
+        this.prevZoomValue = 0;
         this._didPan = false;
         this._viewportTransform = {
             width: this.getCanvas().viewportTransform[4],
@@ -82,11 +83,8 @@ class Zoom extends Component {
      */
     resetCanvas() {
         const canvas = this.getCanvas();
-        if (this._didPan) {
-            canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-        }
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         this._didPan = false;
-        canvas.setZoom(1);
     }
 
     /**
@@ -99,7 +97,13 @@ class Zoom extends Component {
         if (this._zoomScale < 1) {
             this._zoomScale = 1;
         }
-        canvas.setZoom(this._zoomScale);
+
+        if (this._zoomScale < this.prevZoomValue && this._didPan) {
+            canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+            this._didPan = false;
+        }
+        canvas.zoomToPoint(canvas.getVpCenter(), this._zoomScale);
+        this.prevZoomValue = this._zoomScale;
         canvas.on({
             'mouse:down': this._listeners.mousedown
         });
@@ -112,7 +116,7 @@ class Zoom extends Component {
      */
     _onFabricMouseDown(fEvent) {
         const canvas = this.getCanvas();
-        if (fEvent.e.altKey === true) {
+        if (fEvent.e.shiftKey === true) {
             canvas.isDragging = true;
             canvas.selection = false;
             canvas.lastPosX = fEvent.e.clientX;
@@ -132,32 +136,23 @@ class Zoom extends Component {
     // eslint-disable-next-line complexity
     _onFabricMouseMove(fEvent) {
         const canvas = this.getCanvas();
-        const wrapperWidth = canvas.wrapperEl.clientWidth;
-        const wrapperHeight = canvas.wrapperEl.clientHeight;
-        const zoom = canvas.getZoom();
         if (canvas.isDragging) {
-            if (zoom < 0.4) {
-                canvas.viewportTransform[4] = 200 - (1000 * zoom / 2);
-                canvas.viewportTransform[5] = 200 - (1000 * zoom / 2);
-            } else {
-                canvas.viewportTransform[4] += fEvent.e.clientX - canvas.lastPosX;
-                canvas.viewportTransform[5] += fEvent.e.clientY - canvas.lastPosY;
-                if (canvas.viewportTransform[4] >= 0) {
-                    canvas.viewportTransform[4] = 0;
-                } else if (canvas.viewportTransform[4] < (wrapperWidth - (wrapperWidth * zoom)) * 2) {
-                    canvas.viewportTransform[4] = (wrapperWidth - (wrapperWidth * zoom)) * 2;
-                }
-                if (canvas.viewportTransform[5] >= 0) {
-                    canvas.viewportTransform[5] = 0;
-                } else if (canvas.viewportTransform[5] < (wrapperHeight - (wrapperHeight * zoom)) * 2) {
-                    canvas.viewportTransform[5] = (wrapperHeight - (wrapperHeight * zoom)) * 2;
-                }
+            const diffX = fEvent.e.clientX - canvas.lastPosX;
+            if (canvas.vptCoords.br.x < canvas.width || diffX > 0) {
+                canvas.viewportTransform[4] += diffX;
             }
-            // eslint-disable-next-line no-console
-            // console.log(canvas.viewportTransform, wrapperWidth, (wrapperWidth * zoom),  (wrapperWidth * zoom) - wr
-            //   fEvent.e.clientX - canvas.lastPosX);
+            if (canvas.viewportTransform[4] >= 0) {
+                canvas.viewportTransform[4] = 0;
+            }
+            const diffY = fEvent.e.clientY - canvas.lastPosY;
+            if (canvas.vptCoords.br.y < canvas.height || diffY > 0) {
+                canvas.viewportTransform[5] += diffY;
+            }
+            if (canvas.viewportTransform[5] >= 0) {
+                canvas.viewportTransform[5] = 0;
+            }
             this._didPan = true;
-            canvas.renderAll();
+            canvas.requestRenderAll();
             canvas.lastPosX = fEvent.e.clientX;
             canvas.lastPosY = fEvent.e.clientY;
         }
