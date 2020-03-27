@@ -143,9 +143,6 @@ class Zoom extends Component {
         const canvas = this.getCanvas();
         if (canvas.isDragging) {
             const diffX = fEvent.e.clientX - canvas.lastPosX;
-            if (canvas.vptCoords.br.x > canvas.width) {
-                canvas.viewportTransform[4] -= diffX;
-            }
             if (canvas.vptCoords.br.x < canvas.width || diffX > 0) {
                 canvas.viewportTransform[4] += diffX;
             }
@@ -153,9 +150,6 @@ class Zoom extends Component {
                 canvas.viewportTransform[4] = 0;
             }
             const diffY = fEvent.e.clientY - canvas.lastPosY;
-            if (canvas.vptCoords.br.y > canvas.height) {
-                canvas.viewportTransform[5] -= diffY;
-            }
             if (canvas.vptCoords.br.y < canvas.height || diffY > 0) {
                 canvas.viewportTransform[5] += diffY;
             }
@@ -163,7 +157,7 @@ class Zoom extends Component {
                 canvas.viewportTransform[5] = 0;
             }
             this._didPan = true;
-            canvas.requestRenderAll();
+            canvas.renderAll();
             canvas.lastPosX = fEvent.e.clientX;
             canvas.lastPosY = fEvent.e.clientY;
         }
