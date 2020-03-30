@@ -1,4 +1,6 @@
 # Fork of Tui-Image-Editor
+
+## Added Functionalities
 - Zoom
 - Pan
 - Undo/Redo Data
