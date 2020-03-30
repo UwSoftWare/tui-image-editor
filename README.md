@@ -19,5 +19,5 @@
 
 - Useful for updating UI to last redo or undo change. 
 
-#Arrow Shape
+# Arrow Shape
 - New arrow shape can be used from Shape Menu
