@@ -6,7 +6,7 @@
 - Undo/Redo Data
 - Arrow Shape
 
-# Zoom 
+### Zoom 
 `setZoom(value: number, reset: boolean = false);` 
 
 - value > 1 & value < n 
