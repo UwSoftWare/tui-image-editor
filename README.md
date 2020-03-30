@@ -7,7 +7,7 @@
 # Zoom 
 `setZoom(value: number, reset: boolean = false);` 
 
-- value > 1 && value < n 
+- value > 1 & value < n 
 - reset = true (resets zoom and transform) 
 
 # Pan
