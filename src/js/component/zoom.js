@@ -7,7 +7,7 @@ import Promise from 'core-js/library/es6/promise';
 import Component from '../interface/component';
 import consts from '../consts';
 
-const {componentNames} = consts;
+const {componentNames, eventNames} = consts;
 /**
  * Image Zoom component
  * @class Zoom
@@ -172,6 +172,11 @@ class Zoom extends Component {
         const canvas = this.getCanvas();
         canvas.isDragging = false;
         canvas.selection = true;
+        const data = {
+            x: canvas.vptCoords.br.x > canvas.width,
+            y: canvas.vptCoords.br.y > canvas.height
+        };
+        this.fire(eventNames.IMAGE_PANNED, data);
         canvas.off({
             'mouse:move': listeners.mousemove,
             'mouse:up': listeners.mouseup

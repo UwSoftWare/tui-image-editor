@@ -157,7 +157,9 @@ class Graphics {
             onObjectSelected: this._onObjectSelected.bind(this),
             onPathCreated: this._onPathCreated.bind(this),
             onSelectionCleared: this._onSelectionCleared.bind(this),
-            onSelectionCreated: this._onSelectionCreated.bind(this)
+            onSelectionCreated: this._onSelectionCreated.bind(this),
+            onImagePanned: this._onImagePanned.bind(this)
+
         };
 
         this._setObjectCachingToFalse();
@@ -971,7 +973,8 @@ class Graphics {
             'path:created': handler.onPathCreated,
             'selection:cleared': handler.onSelectionCleared,
             'selection:created': handler.onSelectionCreated,
-            'selection:updated': handler.onObjectSelected
+            'selection:updated': handler.onObjectSelected,
+            'image:panned': handler.onImagePanned
         });
     }
 
@@ -1069,6 +1072,18 @@ class Graphics {
         const params = this.createObjectProperties(target);
 
         this.fire(events.OBJECT_ACTIVATED, params);
+    }
+
+    /**
+     * "object:selected" canvas event handler
+     * @param {{target: fabric.Object, e: MouseEvent}} fEvent - Fabric event
+     * @private
+     */
+    _onImagePanned(fEvent) {
+        const {target} = fEvent;
+        const params = this.createObjectProperties(target);
+
+        this.fire(events.IMAGE_PANNED, params);
     }
 
     /**

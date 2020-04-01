@@ -31,7 +31,8 @@ const {
     ICON_CREATE_END,
     SELECTION_CLEARED,
     SELECTION_CREATED,
-    ADD_OBJECT_AFTER} = events;
+    ADD_OBJECT_AFTER,
+    IMAGE_PANNED} = events;
 
 /**
  * Image filter result
@@ -179,7 +180,7 @@ class ImageEditor {
             this.ui ? this.ui.getEditorArea() : wrapper, {
                 cssMaxWidth: options.cssMaxWidth,
                 cssMaxHeight: options.cssMaxHeight,
-                useItext: !!this.ui,
+                useItext: true,
                 useDragAddIcon: !!this.ui
             }
         );
@@ -205,7 +206,8 @@ class ImageEditor {
             iconCreateResize: this._onIconCreateResize.bind(this),
             iconCreateEnd: this._onIconCreateEnd.bind(this),
             selectionCleared: this._selectionCleared.bind(this),
-            selectionCreated: this._selectionCreated.bind(this)
+            selectionCreated: this._selectionCreated.bind(this),
+            imagePanned: this._onImagePanned.bind(this)
         };
 
         this._attachInvokerEvents();
@@ -304,7 +306,8 @@ class ImageEditor {
             [ICON_CREATE_END]: this._handlers.iconCreateEnd,
             [SELECTION_CLEARED]: this._handlers.selectionCleared,
             [SELECTION_CREATED]: this._handlers.selectionCreated,
-            [ADD_OBJECT_AFTER]: this._handlers.addObjectAfter
+            [ADD_OBJECT_AFTER]: this._handlers.addObjectAfter,
+            [IMAGE_PANNED]: this._handlers.imagePanned
         });
     }
 
@@ -1593,6 +1596,25 @@ class ImageEditor {
     **/
     setZoom(scale, reset = false, transform = null) {
         return this._zoom('setZoomValue', scale, reset, transform);
+    }
+
+    /**
+     * 'imagePanned' event handler
+     * @param {ObjectProps} props - object properties
+     * @private
+     */
+    _onImagePanned(props) {
+        /**
+          * The event when object angle is changed
+          * @event ImageEditor#imagePanned
+          * @param {ObjectProps} props - object properties
+          * @example
+          * imageEditor.on('imagePanned', function(props) {
+          *     console.log(props);
+          *     console.log(props.type);
+          * });
+        */
+        this.fire(events.IMAGE_PANNED, props);
     }
 }
 
