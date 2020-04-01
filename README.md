@@ -1,4 +1,5 @@
 # Fork of Tui-Image-Editor
+`npm install @sabinayakc/tui.image-editor`
 
 ## Added Functionalities
 - Zoom
