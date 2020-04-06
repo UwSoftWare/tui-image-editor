@@ -44,4 +44,4 @@ imageEditor.on(
 ### Resize 
 `imageEditor.resize({width: 640, height : 480})`
 - Listen to image resized event
-`imageEditor.on('imageResized', img => console.log('Resized image', img));`
+`imageEditor.on(imageResized: img => console.log('Resized image', img));`
