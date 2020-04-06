@@ -6,6 +6,7 @@
 - Pan
 - Undo/Redo Data
 - Arrow Shape
+- Resize
 
 ### Zoom 
 `setZoom(value: number, reset: boolean = false);` 
@@ -37,5 +38,10 @@ imageEditor.on(
 
 ### Arrow Shape
 - New arrow shape type. 
-` this.imageEditor.setDrawingShape('arrow');`
+` imageEditor.setDrawingShape('arrow');`
 - To create an arrow, click on the canvas to create the arrow orign and drag the mouse to where you want the arrow to point. 
+
+### Resize 
+`imageEditor.resize({width: 640, height : 480})`
+- Listen to image resized event
+`imageEditor.on('imageResized', img => console.log('Resized image', img));`
