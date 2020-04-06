@@ -51,7 +51,8 @@ module.exports = {
         'ICON',
         'FILTER',
         'SHAPE',
-        'ZOOM'
+        'ZOOM',
+        'RESIZE'
     ),
 
     /**
@@ -78,7 +79,8 @@ module.exports = {
         'RESIZE_CANVAS_DIMENSION': 'resizeCanvasDimension',
         'SET_OBJECT_PROPERTIES': 'setObjectProperties',
         'SET_OBJECT_POSITION': 'setObjectPosition',
-        'ZOOM_IMAGE': 'zoom'
+        'ZOOM_IMAGE': 'zoom',
+        'RESIZE_IMAGE': 'resize'
     },
 
     /**
@@ -106,7 +108,8 @@ module.exports = {
         UNDO_STACK_CHANGED: 'undoStackChanged',
         SELECTION_CLEARED: 'selectionCleared',
         SELECTION_CREATED: 'selectionCreated',
-        IMAGE_PANNED: 'imagePanned'
+        IMAGE_PANNED: 'imagePanned',
+        IMAGE_RESIZED: 'imageResized'
     },
 
     /**
@@ -172,7 +175,8 @@ module.exports = {
         undo: 'The promise of undo command is reject.',
         unsupportedOperation: 'Unsupported operation.',
         unsupportedType: 'Unsupported object type.',
-        zoom: 'The current value is same as the old value.'
+        zoom: 'The current value is same as the old value.',
+        resize: 'The promise of resize command is reject.'
     },
 
     /**

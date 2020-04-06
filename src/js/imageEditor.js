@@ -32,7 +32,8 @@ const {
     SELECTION_CLEARED,
     SELECTION_CREATED,
     ADD_OBJECT_AFTER,
-    IMAGE_PANNED} = events;
+    IMAGE_PANNED,
+    IMAGE_RESIZED} = events;
 
 /**
  * Image filter result
@@ -207,7 +208,8 @@ class ImageEditor {
             iconCreateEnd: this._onIconCreateEnd.bind(this),
             selectionCleared: this._selectionCleared.bind(this),
             selectionCreated: this._selectionCreated.bind(this),
-            imagePanned: this._onImagePanned.bind(this)
+            imagePanned: this._onImagePanned.bind(this),
+            imageResized: this._onImageResized.bind(this)
         };
 
         this._attachInvokerEvents();
@@ -307,7 +309,8 @@ class ImageEditor {
             [SELECTION_CLEARED]: this._handlers.selectionCleared,
             [SELECTION_CREATED]: this._handlers.selectionCreated,
             [ADD_OBJECT_AFTER]: this._handlers.addObjectAfter,
-            [IMAGE_PANNED]: this._handlers.imagePanned
+            [IMAGE_PANNED]: this._handlers.imagePanned,
+            [IMAGE_RESIZED]: this._handlers.imageResized
         });
     }
 
@@ -1569,7 +1572,7 @@ class ImageEditor {
      * @param {number} scale - Zoom settings of image
      * @param {boolean} reset - Zoom Scale Value
      * @param {Array} transform - Zoom Transform Value
-     * @returns {Promise<RotateStatus, ErrorMsg>}
+     * @returns {Promise<ErrorMsg>}
      * @private
      */
     _zoom(type, scale, reset, transform) {
@@ -1580,7 +1583,7 @@ class ImageEditor {
      * Zoom image
      * @returns {Promise}
      * @param {object} settings - Additional settings to zoom image
-     * @returns {Promise<RotateStatus, ErrorMsg>}
+     * @returns {Promise<ErrorMsg>}
      */
     zoom(settings) {
         return this._zoom('zoom', settings);
@@ -1591,11 +1594,19 @@ class ImageEditor {
      * @param {number} scale - Zoom settings of image
      * @param {boolean} reset - Zoom Scale Value
      * @param {Array} transform - Zoom Transform Value
-     * @returns {Promise<RotateStatus, ErrorMsg>}
+     * @returns {Promise<ErrorMsg>}
      * @example
     **/
     setZoom(scale, reset = false, transform = null) {
         return this._zoom('setZoomValue', scale, reset, transform);
+    }
+
+    /**
+     * @param {object} dimensions - Image Dimensions
+     * @returns {Promise<ErrorMsg>}
+     */
+    resize(dimensions) {
+        return this.execute(commands.RESIZE_IMAGE, 'resize', dimensions);
     }
 
     /**
@@ -1605,7 +1616,7 @@ class ImageEditor {
      */
     _onImagePanned(props) {
         /**
-          * The event when object angle is changed
+          * The event when image is panned
           * @event ImageEditor#imagePanned
           * @param {ObjectProps} props - object properties
           * @example
@@ -1615,6 +1626,25 @@ class ImageEditor {
           * });
         */
         this.fire(events.IMAGE_PANNED, props);
+    }
+
+    /**
+     * 'imagePanned' event handler
+     * @param {ObjectProps} props - object properties
+     * @private
+     */
+    _onImageResized(props) {
+        /**
+          * The event when image is resized
+          * @event ImageEditor#imageResized
+          * @param {ObjectProps} props - object properties
+          * @example
+          * imageEditor.on('imageResized', function(props) {
+          *     console.log(props);
+          *     console.log(props.type);
+          * });
+        */
+        this.fire(events.IMAGE_RESIZED, props);
     }
 }
 

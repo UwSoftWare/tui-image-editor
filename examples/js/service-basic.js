@@ -42,6 +42,8 @@ var $btnLoadMaskImage = $('#input-mask-image-file');
 var $btnApplyMask = $('#btn-apply-mask');
 var $btnClose = $('.close');
 var $btnZoom = $('#btn-zoom');
+var $btnResizeMain = $('#btn-resize-main');
+var $btnResize = $('#btn-resize');
 var $btnZoomReset = $('#btn-reset-zoom');
 
 // Input etc.
@@ -73,6 +75,8 @@ var $inputCheckBlend = $('#input-check-blend');
 var $inputCheckColorFilter = $('#input-check-color-filter');
 var $inputRangeColorFilterValue = $('#input-range-color-filter-value');
 var $inputZoomRange = $('#input-zoom-range');
+var $inputResizeWidth = $('#input-resize-width');
+var $inputResizeHeight = $('#input-resize-height');
 // Sub menus
 var $displayingSubMenu = $();
 var $cropSubMenu = $('#crop-sub-menu');
@@ -86,6 +90,7 @@ var $iconSubMenu = $('#icon-sub-menu');
 var $filterSubMenu = $('#filter-sub-menu');
 var $imageFilterSubMenu = $('#image-filter-sub-menu');
 var $zoomSubMenu = $('#zoom-sub-menu');
+var $resizeSubMenu = $('#resize-sub-menu');
 
 // Select line type
 var $selectLine = $('[name="select-line-type"]');
@@ -344,6 +349,10 @@ imageEditor.on({
     },
     imagePanned: function(obj) {
         console.log(obj);
+    },
+    imageResized: function(obj) {
+        const image = obj.toDataURL();
+        imageEditor.loadImageFromURL(image, 'test');
     }
 });
 
@@ -455,8 +464,21 @@ $btnZoom.on('click', function() {
     $displayingSubMenu = $zoomSubMenu.show();
 });
 
+$btnResizeMain.on('click', function() {
+    imageEditor.stopDrawingMode();
+    $displayingSubMenu.hide();
+    $displayingSubMenu = $resizeSubMenu.show();
+});
+
 $btnZoomReset.on('click', function() {
     imageEditor.setZoom(1, true);
+});
+
+$btnResize.on('click', function() {
+    imageEditor.resize({width: $inputResizeWidth.val(),
+        height: $inputResizeHeight.val()});
+    // imageEditor.resize({width: 400,
+    //     height: 400});
 });
 
 $inputRotationRange.on('mousedown', function() {

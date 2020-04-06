@@ -16,6 +16,7 @@ import Icon from './component/icon';
 import Filter from './component/filter';
 import Shape from './component/shape';
 import Zoom from './component/zoom';
+import Resize from './component/resize';
 import CropperDrawingMode from './drawingMode/cropper';
 import FreeDrawingMode from './drawingMode/freeDrawing';
 import LineDrawingMode from './drawingMode/lineDrawing';
@@ -158,7 +159,8 @@ class Graphics {
             onPathCreated: this._onPathCreated.bind(this),
             onSelectionCleared: this._onSelectionCleared.bind(this),
             onSelectionCreated: this._onSelectionCreated.bind(this),
-            onImagePanned: this._onImagePanned.bind(this)
+            onImagePanned: this._onImagePanned.bind(this),
+            onImageResized: this._onImageResized.bind(this)
 
         };
 
@@ -888,6 +890,7 @@ class Graphics {
         this._register(this._componentMap, new Filter(this));
         this._register(this._componentMap, new Shape(this));
         this._register(this._componentMap, new Zoom(this));
+        this._register(this._componentMap, new Resize(this));
     }
 
     /**
@@ -974,7 +977,8 @@ class Graphics {
             'selection:cleared': handler.onSelectionCleared,
             'selection:created': handler.onSelectionCreated,
             'selection:updated': handler.onObjectSelected,
-            'image:panned': handler.onImagePanned
+            'image:panned': handler.onImagePanned,
+            'image:resized': handler.onImageResized
         });
     }
 
@@ -1075,7 +1079,7 @@ class Graphics {
     }
 
     /**
-     * "object:selected" canvas event handler
+     * "image:panned" canvas event handler
      * @param {{target: fabric.Object, e: MouseEvent}} fEvent - Fabric event
      * @private
      */
@@ -1084,6 +1088,18 @@ class Graphics {
         const params = this.createObjectProperties(target);
 
         this.fire(events.IMAGE_PANNED, params);
+    }
+
+    /**
+     * "image:resized" canvas event handler
+     * @param {{target: fabric.Object, e: MouseEvent}} fEvent - Fabric event
+     * @private
+     */
+    _onImageResized(fEvent) {
+        const {target} = fEvent;
+        const params = this.createObjectProperties(target);
+
+        this.fire(events.IMAGE_RESIZED, params);
     }
 
     /**
