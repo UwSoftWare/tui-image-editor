@@ -31,7 +31,7 @@ const SUB_UI_COMPONENT = {
 const BI_EXPRESSION_MINSIZE_WHEN_TOP_POSITION = '1300';
 
 /**
- * Ui class
+ * Default UI Class
  * @class
  * @param {string|HTMLElement} element - Wrapper's element or selector
  * @param {Object} [options] - Ui setting options
@@ -120,7 +120,7 @@ class Ui {
      *     uiSize: {width: 1000, height: 1000}
      * });
      * @example
-     * // Apply the ui state while preserving the previous attribute (for example, if responsive Ui)
+     * // Apply the ui state while preserving the previous attribute (for example, if responsive UI)
      * imageEditor.ui.resizeEditor();
      */
     resizeEditor({uiSize, imageSize = this.imageSize} = {}) {
