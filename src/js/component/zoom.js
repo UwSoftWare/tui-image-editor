@@ -99,7 +99,7 @@ class Zoom extends Component {
      */
     _zoomCanvas() {
         const canvas = this.getCanvas();
-        if (this._zoomScale < 1) {
+        if (this._zoomScale < 0) {
             this._zoomScale = 1;
         }
 
