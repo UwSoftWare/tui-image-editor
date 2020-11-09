@@ -1,4 +1,72 @@
-# Fork of Tui-Image-Editor
+I added two things for my use additional to sabinayakcs changes (described below). Maybe it helps someone else too:
+
+- The Zoom gets back to 1 right before a cropping is applied. In my case the image got wrong resolution if the zoom was set to some else value.
+
+- I enabled the zoom to be less than 1. Was there any reason for not doing this?
+
+My setup is as following:
+
+- I initialise TUI with full image size, so `cssMaxWidth` and `cssMaxHeight` is set to a never reached value like 100.000
+- This leads to a very big image and I usually only need to zoom out ( < 1).
+- The image is scrollable with scrollbars which indicate where I am. The Pan feature you introduced didnt worked well for me since the drawing tool always draws when  paning with shift + mouse.
+
+The Zoom is done by a input, a 1:1 and a 100% button (html uses fomantic ui):
+```html
+<div class="ui action input"  style='position: absolute;    bottom: 12px;    z-index: 99;    left: 5px;'> 
+    <input type="number" id='tui-zoom-input' min="1" max='1000' value="100" oninput="if(this.value >= 1){imageEditor.setZoom( (this.value / 100), false);}"> 
+    <button class="ui button" onclick="$('#tui-zoom-input').val(100); imageEditor.setZoom(1, true);">1:1</button> 
+    <button class="ui button" onclick="setInitialZoom();">auto</button> 
+</div> 
+```
+
+The function `setInitialZoom()` is also called after tui is initialized and sets the zoom to fit the window and scrolls to the center:
+
+```js
+function setInitialZoom() { 
+    let zoom = $('.tui-image-editor-wrap').height() / $('.tui-image-editor-size-wrap').height(); 
+    let zoom2 = $('.tui-image-editor-wrap').width() / $('.tui-image-editor-size-wrap').width(); 
+    if(zoom2 < zoom) { 
+        zoom = zoom2; 
+    } 
+    zoom = zoom * 100; 
+    zoom = Math.floor(zoom); 
+    $('#tui-zoom-input').val(zoom); 
+    zoom = zoom / 100; 
+    imageEditor.setZoom(zoom, false); 
+ 
+    function centerVertical(){//centralize vertical 
+        var scrollableDivJ=$(".tui-image-editor-wrap"); 
+        scrollableDivJ.scrollTop("1000000");//scroll to max 
+        var scrollHeight=scrollableDivJ.prop("scrollHeight"); 
+       var diff=(scrollHeight-scrollableDivJ.scrollTop())/2; 
+       var middle=scrollHeight/2-diff; 
+       scrollableDivJ.scrollTop(middle); 
+    } 
+ 
+    function centerHorizontal(){//centralize horizontal 
+        var scrollableDivJ=$(".tui-image-editor-wrap"); 
+        scrollableDivJ.scrollLeft("1000000");//scroll to max 
+        var scrollWidth=scrollableDivJ.prop("scrollWidth"); 
+        var diff=(scrollWidth-scrollableDivJ.scrollLeft())/2; 
+        var middle=scrollWidth/2-diff; 
+        scrollableDivJ.scrollLeft(middle); 
+    } 
+ 
+    centerVertical(); 
+    centerHorizontal(); 
+ 
+} 
+```
+
+If this makes sense, then it might be an idea to merge this into the zoom function itself. I haven't done this, because its referencing dom objects which aren't created by tui.
+Maybe this PR doesn't make that much sense to you at all, but I just thought I'll share my implementation. 
+
+![image](https://user-images.githubusercontent.com/3764089/81753129-643d0980-94b3-11ea-9bc5-ca942d35cf02.png)
+
+
+----------
+
+# sabinayakcs Fork of Tui-Image-Editor
 `npm install @sabinayakc/tui.image-editor`
 
 ## Added Functionalities
