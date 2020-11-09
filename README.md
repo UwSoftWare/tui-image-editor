@@ -66,7 +66,8 @@ Maybe this PR doesn't make that much sense to you at all, but I just thought I'l
 
 ----------
 
-# sabinayakcs Fork of Tui-Image-Editor
+# sabinayakcs readme of his fork:
+# Fork of Tui-Image-Editor
 `npm install @sabinayakc/tui.image-editor`
 
 ## Added Functionalities
