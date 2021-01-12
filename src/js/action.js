@@ -483,9 +483,8 @@ export default {
                 });
             },
             addObjectAfter: obj => {
-                if (['rect', 'circle', 'triangle'].indexOf(obj.type) > -1) {
+                if (['rect', 'circle', 'triangle', 'arrow', 'polyline'].indexOf(obj.type) > -1) {
                     this.ui.shape.setMaxStrokeValue(Math.min(obj.width, obj.height));
-                    this.ui.shape.changeStandbyMode();
                 }
             },
             objectScaled: obj => {
@@ -507,7 +506,8 @@ export default {
                 this.activeObjectId = null;
                 if (this.ui.submenu === 'text') {
                     this.changeCursor('text');
-                } else if (this.ui.submenu !== 'draw' && this.ui.submenu !== 'crop') {
+                }
+                else if (this.ui.submenu !== 'shape' && this.ui.submenu !== 'draw' && this.ui.submenu !== 'crop') {
                     this.stopDrawingMode();
                 }
             }
@@ -552,11 +552,11 @@ export default {
     _zoomAction() {
         return extend({
             zoom: value => {
-                this.zoom(value);
+                this.setZoom(value);
                 this.ui.resizeEditor();
             },
             setZoomValue: value => {
-                this.setZoomValue(value);
+                this.setZoom(value);
                 this.ui.resizeEditor();
             }
         }, this._commonAction());

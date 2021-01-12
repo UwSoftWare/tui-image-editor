@@ -212,7 +212,7 @@ module.exports = {
         realTimeEvent: true,
         min: 2,
         max: 300,
-        value: 3
+        value: 95
     },
 
     defaultTextRangeValus: {

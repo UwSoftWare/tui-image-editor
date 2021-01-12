@@ -15,6 +15,7 @@ import Icon from './ui/icon';
 import Draw from './ui/draw';
 import Filter from './ui/filter';
 import Locale from './ui/locale/locale';
+import Zoom from './ui/zoom';
 
 const SUB_UI_COMPONENT = {
     Shape,
@@ -25,7 +26,8 @@ const SUB_UI_COMPONENT = {
     Mask,
     Icon,
     Draw,
-    Filter
+    Filter,
+    Zoom
 };
 
 const BI_EXPRESSION_MINSIZE_WHEN_TOP_POSITION = '1300';
@@ -185,7 +187,7 @@ class Ui {
             },
             locale: {},
             menuIconPath: '',
-            menu: ['crop', 'flip', 'rotate', 'draw', 'shape', 'icon', 'text', 'mask', 'filter'],
+            menu: ['crop', 'flip', 'rotate', 'draw', 'shape', 'icon', 'text', 'mask', 'filter', 'zoom'],
             initMenu: '',
             uiSize: {
                 width: '100%',

@@ -92,7 +92,7 @@ class Line extends Component {
         const canvas = this.getCanvas();
 
         canvas.defaultCursor = 'default';
-        canvas.selection = true;
+        // canvas.selection = true;
 
         canvas.forEachObject(obj => {
             obj.set({

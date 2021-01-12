@@ -166,7 +166,6 @@ class Text extends Component {
     end() {
         const canvas = this.getCanvas();
 
-        canvas.selection = true;
         canvas.defaultCursor = 'default';
 
         if (this.useItext) {

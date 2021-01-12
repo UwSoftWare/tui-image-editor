@@ -106,7 +106,7 @@ class Icon extends Component {
                 canvas.defaultCursor = 'default';
                 canvas.off('mouse:up');
                 canvas.off('mouse:move');
-                canvas.selection = true;
+                // canvas.selection = true;
             }
         });
     }

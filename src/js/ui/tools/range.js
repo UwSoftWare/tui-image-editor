@@ -253,6 +253,7 @@ class Range {
      */
     _addClickEvent() {
         this.rangeElement.addEventListener('click', this.eventHandler.changeSlideFinally);
+        this.rangeElement.addEventListener('touchcancel', this.eventHandler.changeSlideFinally);
     }
 
     /**
@@ -261,6 +262,7 @@ class Range {
      */
     _removeClickEvent() {
         this.rangeElement.removeEventListener('click', this.eventHandler.changeSlideFinally);
+        this.rangeElement.removeEventListener('touchcancel', this.eventHandler.changeSlideFinally);
     }
 
     /**
@@ -269,6 +271,7 @@ class Range {
      */
     _addDragEvent() {
         this.pointer.addEventListener('mousedown', this.eventHandler.startChangingSlide);
+        this.pointer.addEventListener('touchstart', this.eventHandler.startChangingSlide);
     }
 
     /**
@@ -277,6 +280,7 @@ class Range {
      */
     _removeDragEvent() {
         this.pointer.removeEventListener('mousedown', this.eventHandler.startChangingSlide);
+        this.pointer.removeEventListener('touchstart', this.eventHandler.startChangingSlide);
     }
 
     /**
@@ -285,7 +289,11 @@ class Range {
      * @private
      */
     _changeSlide(event) {
-        const changePosition = event.screenX;
+        if (event.touches && event.touches.length > 1) {
+            return;
+        }
+
+        const changePosition = event.screenX || event.touches[0].screenX;
         const diffPosition = changePosition - this.firstPosition;
         let touchPx = this.firstLeft + diffPosition;
         touchPx = touchPx > this.rangeWidth ? this.rangeWidth : touchPx;
@@ -323,11 +331,17 @@ class Range {
     }
 
     _startChangingSlide(event) {
-        this.firstPosition = event.screenX;
+        if (event.touches && event.touches.length > 1) {
+            return;
+        }
+
+        this.firstPosition = event.screenX || event.touches[0].screenX;
         this.firstLeft = toInteger(this.pointer.style.left) || 0;
 
         document.addEventListener('mousemove', this.eventHandler.changeSlide);
         document.addEventListener('mouseup', this.eventHandler.stopChangingSlide);
+        document.addEventListener('touchmove', this.eventHandler.changeSlide);
+        document.addEventListener('touchend', this.eventHandler.stopChangingSlide);
     }
 
     /**
@@ -339,6 +353,8 @@ class Range {
 
         document.removeEventListener('mousemove', this.eventHandler.changeSlide);
         document.removeEventListener('mouseup', this.eventHandler.stopChangingSlide);
+        document.removeEventListener('touchmove', this.eventHandler.changeSlide);
+        document.removeEventListener('touchend', this.eventHandler.stopChangingSlide);
     }
 
     /**

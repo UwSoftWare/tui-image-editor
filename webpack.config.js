@@ -28,7 +28,8 @@ module.exports = {
         libraryTarget: 'umd',
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/dist',
-        filename: `${FILENAME}.js`
+        filename: `${FILENAME}.js`,
+        umdNamedDefine: true   // Important
     },
     externals: [{
         'tui-code-snippet': {

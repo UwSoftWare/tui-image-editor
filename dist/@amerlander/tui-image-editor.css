@@ -1,5 +1,5 @@
 /*!
- * @sabinayakc/tui-image-editor.js
+ * @amerlander/tui-image-editor.js
  * @version 3.9.0
  * @author Sabinaya KC <kc.sabinaya@gmail.com>
  * @license MIT
@@ -313,6 +313,7 @@ body > textarea {
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-crop .tui-image-editor-submenu > div.tui-image-editor-menu-crop,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-flip .tui-image-editor-submenu > div.tui-image-editor-menu-flip,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-rotate .tui-image-editor-submenu > div.tui-image-editor-menu-rotate,
+.tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-zoom .tui-image-editor-submenu > div.tui-image-editor-menu-zoom,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-shape .tui-image-editor-submenu > div.tui-image-editor-menu-shape,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-text .tui-image-editor-submenu > div.tui-image-editor-menu-text,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-mask .tui-image-editor-submenu > div.tui-image-editor-menu-mask,
@@ -325,6 +326,7 @@ body > textarea {
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-flip .tui-image-editor-submenu,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-rotate .tui-image-editor-submenu,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-shape .tui-image-editor-submenu,
+.tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-zoom .tui-image-editor-submenu,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-text .tui-image-editor-submenu,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-mask .tui-image-editor-submenu,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-icon .tui-image-editor-submenu,
@@ -916,12 +918,14 @@ body > textarea {
 }
 .tie-shape-button.rect .tui-image-editor-button.rect svg > use.normal,
 .tie-shape-button.circle .tui-image-editor-button.circle svg > use.normal,
-.tie-shape-button.triangle .tui-image-editor-button.triangle svg > use.normal {
+.tie-shape-button.triangle .tui-image-editor-button.triangle svg > use.normal,
+.tie-shape-button.arrow .tui-image-editor-button.arrow svg > use.normal {
   display: none;
 }
 .tie-shape-button.rect .tui-image-editor-button.rect svg > use.active,
 .tie-shape-button.circle .tui-image-editor-button.circle svg > use.active,
-.tie-shape-button.triangle .tui-image-editor-button.triangle svg > use.active {
+.tie-shape-button.triangle .tui-image-editor-button.triangle svg > use.active,
+.tie-shape-button.arrow .tui-image-editor-button.arrow svg > use.active {
   display: block;
 }
 .tie-text-effect-button .tui-image-editor-button.active svg > use.active {

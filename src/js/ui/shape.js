@@ -8,7 +8,7 @@ import {defaultShapeStrokeValus} from '../consts';
 const SHAPE_DEFAULT_OPTION = {
     stroke: '#ffbb3b',
     fill: '',
-    strokeWidth: 3
+    strokeWidth: 95
 };
 
 /**
@@ -111,7 +111,11 @@ class Shape extends Submenu {
      * Executed when the menu starts.
      */
     changeStartMode() {
+        this.type = 'arrow';
         this.actions.stopDrawingMode();
+        this.actions.changeSelectableAll(false);
+        this.actions.modeChange('shape');
+        this.selector('.tie-shape-button').classList.add('arrow');
     }
 
     /**
@@ -120,9 +124,11 @@ class Shape extends Submenu {
     changeStandbyMode() {
         this.type = null;
         this.actions.changeSelectableAll(true);
+        this.actions.stopDrawingMode();
         this._els.shapeSelectButton.classList.remove('circle');
         this._els.shapeSelectButton.classList.remove('triangle');
         this._els.shapeSelectButton.classList.remove('rect');
+        this._els.shapeSelectButton.classList.remove('arrow');
     }
 
     /**
@@ -162,17 +168,14 @@ class Shape extends Submenu {
     _changeShapeHandler(event) {
         const button = event.target.closest('.tui-image-editor-button');
         if (button) {
-            this.actions.stopDrawingMode();
             this.actions.discardSelection();
-            const shapeType = this.getButtonType(button, ['circle', 'triangle', 'rect']);
+            const shapeType = this.getButtonType(button, ['circle', 'triangle', 'rect', 'arrow']);
 
-            if (this.type === shapeType) {
-                this.changeStandbyMode();
-
-                return;
-            }
-            this.changeStandbyMode();
             this.type = shapeType;
+            this._els.shapeSelectButton.classList.remove('circle');
+            this._els.shapeSelectButton.classList.remove('triangle');
+            this._els.shapeSelectButton.classList.remove('rect');
+            this._els.shapeSelectButton.classList.remove('arrow');
             event.currentTarget.classList.add(shapeType);
             this.actions.changeSelectableAll(false);
             this.actions.modeChange('shape');

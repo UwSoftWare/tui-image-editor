@@ -160,8 +160,8 @@ class Graphics {
             onSelectionCleared: this._onSelectionCleared.bind(this),
             onSelectionCreated: this._onSelectionCreated.bind(this),
             onImagePanned: this._onImagePanned.bind(this),
-            onImageResized: this._onImageResized.bind(this)
-
+            onImageResized: this._onImageResized.bind(this),
+            onWindowResize: this._onWindowResize.bind(this)
         };
 
         this._setObjectCachingToFalse();
@@ -169,6 +169,13 @@ class Graphics {
         this._createDrawingModeInstances();
         this._createComponents();
         this._attachCanvasEvents();
+
+        window.addEventListener('resize', this._handler.onWindowResize);
+        window.addEventListener('orientationchange', this._handler.onWindowResize);
+    }
+
+    _onWindowResize() {
+        this.adjustCanvasDimension();
     }
 
     /**
@@ -180,6 +187,9 @@ class Graphics {
         this._canvas.clear();
 
         wrapperEl.parentNode.removeChild(wrapperEl);
+
+        window.removeEventListener('resize', this._handler.onWindowResize);
+        window.removeEventListener('orientationchange', this._handler.onWindowResize);
     }
 
     /**
@@ -490,8 +500,11 @@ class Graphics {
      * Adjust canvas dimension with scaling image
      */
     adjustCanvasDimension() {
-        const canvasImage = this.canvasImage.scale(1);
-        const {width, height} = canvasImage.getBoundingRect();
+        const zoom = this.getComponent(components.ZOOM);
+        const zoomValue = zoom.getCurrentValue();
+
+        // const canvasImage = this.canvasImage.scale(1);
+        const {width, height} = this.canvasImage.getBoundingRect();
         const maxDimension = this._calcMaxDimension(width, height);
 
         this.setCanvasCssDimension({
@@ -502,10 +515,21 @@ class Graphics {
         });
 
         this.setCanvasBackstoreDimension({
-            width,
-            height
+            width: maxDimension.width * maxDimension.screenToImageFactor,
+            height: maxDimension.height * maxDimension.screenToImageFactor
         });
-        this._canvas.centerObject(canvasImage);
+
+        const percentUpW = (1.0 - maxDimension.percentWidth) / 2;
+        const percentUpH = (1.0 - maxDimension.percentHeight) / 2;
+
+        this._canvas.viewportTransform[0] = zoomValue;
+        this._canvas.viewportTransform[3] = zoomValue;
+        this._canvas.viewportTransform[4] = -width * percentUpW * zoomValue;
+        this._canvas.viewportTransform[5] = -height * percentUpH * zoomValue;
+        this.renderAll();
+
+        // eslint-disable-next-line no-console
+        console.log(width, height, zoom, percentUpW, percentUpH);
     }
 
     /**
@@ -860,6 +884,8 @@ class Graphics {
             containerClass: 'tui-image-editor-canvas-container',
             enableRetinaScaling: false
         });
+
+        this._canvas.selection = false;
     }
 
     /**
@@ -922,10 +948,14 @@ class Graphics {
      * @private
      */
     _calcMaxDimension(width, height) {
-        const wScaleFactor = this.cssMaxWidth / width;
-        const hScaleFactor = this.cssMaxHeight / height;
-        let cssMaxWidth = Math.min(width, this.cssMaxWidth);
-        let cssMaxHeight = Math.min(height, this.cssMaxHeight);
+        const zoom = this.getComponent(components.ZOOM);
+        const zoomValue = zoom.getCurrentValue();
+
+        const wScaleFactor = this.cssMaxWidth / width * zoomValue;
+        const hScaleFactor = this.cssMaxHeight / height * zoomValue;
+
+        let cssMaxWidth = width;
+        let cssMaxHeight = height;
 
         if (wScaleFactor < 1 && wScaleFactor < hScaleFactor) {
             cssMaxWidth = width * wScaleFactor;
@@ -936,8 +966,11 @@ class Graphics {
         }
 
         return {
-            width: Math.floor(cssMaxWidth),
-            height: Math.floor(cssMaxHeight)
+            width: Math.min(this.cssMaxWidth, Math.floor(cssMaxWidth)),
+            height: Math.min(this.cssMaxHeight, Math.floor(cssMaxHeight)),
+            screenToImageFactor: width / Math.floor(cssMaxWidth) * zoomValue,
+            percentWidth: Math.min(this.cssMaxWidth, Math.floor(cssMaxWidth)) / cssMaxWidth,
+            percentHeight: Math.min(this.cssMaxHeight, Math.floor(cssMaxHeight)) / cssMaxHeight
         };
     }
 
@@ -988,6 +1021,10 @@ class Graphics {
      * @private
      */
     _onMouseDown(fEvent) {
+        if (fEvent.e.touches && fEvent.e.touches.length > 1) {
+            return;
+        }
+
         const originPointer = this._canvas.getPointer(fEvent.e);
         this.fire(events.MOUSE_DOWN, fEvent.e, originPointer);
     }

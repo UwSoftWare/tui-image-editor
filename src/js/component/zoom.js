@@ -40,6 +40,11 @@ class Zoom extends Component {
             width: this.getCanvas().viewportTransform[4],
             height: this.getCanvas().viewportTransform[5]
         };
+
+        const canvas = this.getCanvas();
+        canvas.on({
+            'mouse:down': this._listeners.mousedown
+        });
     }
 
     /**
@@ -104,14 +109,13 @@ class Zoom extends Component {
         }
 
         if (this._zoomScale < this.prevZoomValue && this._didPan) {
-            canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
             this._didPan = false;
         }
-        canvas.zoomToPoint(canvas.getVpCenter(), this._zoomScale);
+
+        this.resetCanvas();
+        this.adjustCanvasDimension();
+        canvas.renderAll();
         this.prevZoomValue = this._zoomScale;
-        canvas.on({
-            'mouse:down': this._listeners.mousedown
-        });
     }
 
     /**
@@ -121,11 +125,17 @@ class Zoom extends Component {
      */
     _onFabricMouseDown(fEvent) {
         const canvas = this.getCanvas();
-        if (fEvent.e.shiftKey === true) {
+
+        if (this.graphics.getDrawingMode() === 'NORMAL') {
+            if (this.getCurrentValue() === 1.0) {
+                return;
+            }
             canvas.isDragging = true;
             canvas.selection = false;
-            canvas.lastPosX = fEvent.e.clientX;
-            canvas.lastPosY = fEvent.e.clientY;
+
+            const pointer = canvas.getPointer(fEvent.e);
+            canvas.lastPosX = pointer.x;
+            canvas.lastPosY = pointer.y;
             canvas.on({
                 'mouse:move': this._listeners.mousemove,
                 'mouse:up': this._listeners.mouseup
@@ -142,14 +152,15 @@ class Zoom extends Component {
     _onFabricMouseMove(fEvent) {
         const canvas = this.getCanvas();
         if (canvas.isDragging) {
-            const diffX = fEvent.e.clientX - canvas.lastPosX;
+            const pointer = canvas.getPointer(fEvent.e);
+            const diffX = (pointer.x - canvas.lastPosX);
             if (canvas.vptCoords.br.x < canvas.width || diffX > 0) {
                 canvas.viewportTransform[4] += diffX;
             }
             if (canvas.viewportTransform[4] >= 0) {
                 canvas.viewportTransform[4] = 0;
             }
-            const diffY = fEvent.e.clientY - canvas.lastPosY;
+            const diffY = (pointer.y - canvas.lastPosY);
             if (canvas.vptCoords.br.y < canvas.height || diffY > 0) {
                 canvas.viewportTransform[5] += diffY;
             }
@@ -158,8 +169,8 @@ class Zoom extends Component {
             }
             this._didPan = true;
             canvas.renderAll();
-            canvas.lastPosX = fEvent.e.clientX;
-            canvas.lastPosY = fEvent.e.clientY;
+            canvas.lastPosX = pointer.x;
+            canvas.lastPosY = pointer.y;
         }
     }
 
@@ -171,7 +182,6 @@ class Zoom extends Component {
         const listeners = this._listeners;
         const canvas = this.getCanvas();
         canvas.isDragging = false;
-        canvas.selection = true;
         const data = {
             x: canvas.vptCoords.br.x > canvas.width,
             y: canvas.vptCoords.br.y > canvas.height

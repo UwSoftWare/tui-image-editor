@@ -12,7 +12,7 @@ import {extend, inArray} from 'tui-code-snippet';
 const {rejectMessages, eventNames, SHAPE_DEFAULT_OPTIONS} = consts;
 const KEY_CODES = consts.keyCodes;
 const SHAPE_INIT_OPTIONS = extend({
-    strokeWidth: 1,
+    strokeWidth: 90,
     stroke: '#000000',
     fill: '#ffffff',
     width: 1,
@@ -20,11 +20,11 @@ const SHAPE_INIT_OPTIONS = extend({
     rx: 0,
     ry: 0
 }, SHAPE_DEFAULT_OPTIONS);
-const DEFAULT_TYPE = 'rect';
+const DEFAULT_TYPE = 'arrow';
 const DEFAULT_WIDTH = 20;
 const DEFAULT_HEIGHT = 20;
 
-const shapeType = ['rect', 'circle', 'triangle', 'arrow'];
+const shapeType = ['rect', 'circle', 'triangle', 'arrow', 'polyline'];
 
 /**
  * Shape
@@ -124,7 +124,6 @@ class Shape extends Component {
 
         canvas.defaultCursor = 'default';
 
-        canvas.selection = true;
         canvas.uniScaleTransform = false;
         canvas.off({
             'mouse:down': this._handlers.mousedown
@@ -376,6 +375,10 @@ class Shape extends Component {
         if (!shape) {
             let data = {};
             if (this._type === 'arrow') {
+                if (this._startPoint.x === pointer.x && this._startPoint.y === pointer.y) {
+                    return;
+                }
+
                 data = {
                     startX: this._startPoint.x,
                     startY: this._startPoint.y,
@@ -392,8 +395,13 @@ class Shape extends Component {
                     height: DEFAULT_HEIGHT
                 };
             }
+
+            if (data.width < 2 && data.height < 2) {
+                return;
+            }
+
             this.add(this._type, data).then(objectProps => {
-                this.fire(eventNames.ADD_OBJECT, objectProps);
+                this.fire(eventNames.ADD_OBJECT_AFTER, objectProps);
             });
         } else if (shape) {
             resizeHelper.adjustOriginToCenter(shape);
