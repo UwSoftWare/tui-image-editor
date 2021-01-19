@@ -41,7 +41,6 @@ const TEXTAREA_STYLES = util.makeStyleText({
     'white-space': 'pre'
 });
 const EXTRA_PIXEL_LINEHEIGHT = 0.1;
-const DBCLICK_TIME = 500;
 
 /**
  * Text
@@ -247,7 +246,10 @@ class Text extends Component {
             }
 
             this.isPrevEditing = true;
-            resolve(this.graphics.createObjectProperties(newText));
+            const obj = this.graphics.createObjectProperties(newText);
+            resolve(obj);
+
+            newText.enterEditing();
         });
     }
 
@@ -622,8 +624,8 @@ class Text extends Component {
      * @returns {boolean} Whether double clicked or not
      * @private
      */
-    _isDoubleClick(newClickTime) {
-        return (newClickTime - this._lastClickTime < DBCLICK_TIME);
+    _isDoubleClick() {
+        return true;
     }
 
     /**

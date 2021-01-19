@@ -12,8 +12,8 @@ import {extend, inArray} from 'tui-code-snippet';
 const {rejectMessages, eventNames, SHAPE_DEFAULT_OPTIONS} = consts;
 const KEY_CODES = consts.keyCodes;
 const SHAPE_INIT_OPTIONS = extend({
-    strokeWidth: 90,
-    stroke: '#000000',
+    strokeWidth: 0,
+    stroke: '',
     fill: '#ffffff',
     width: 1,
     height: 1,
@@ -21,10 +21,10 @@ const SHAPE_INIT_OPTIONS = extend({
     ry: 0
 }, SHAPE_DEFAULT_OPTIONS);
 const DEFAULT_TYPE = 'arrow';
-const DEFAULT_WIDTH = 20;
-const DEFAULT_HEIGHT = 20;
+const DEFAULT_WIDTH = 5;
+const DEFAULT_HEIGHT = 5;
 
-const shapeType = ['rect', 'circle', 'triangle', 'arrow', 'polyline'];
+const shapeType = ['rect', 'circle', 'triangle', 'arrow', 'polyline', 'polygon'];
 
 /**
  * Shape
@@ -205,6 +205,16 @@ class Shape extends Component {
         return new Promise((resolve, reject) => {
             if (inArray(shapeObj.get('type'), shapeType) < 0) {
                 reject(rejectMessages.unsupportedType);
+            }
+
+            if (shapeObj.get('type') === 'polygon' && options.strokeWidth) {
+                shapeObj.points = this._createArrowPoints(
+                    shapeObj.points[0].x,
+                    shapeObj.points[0].y,
+                    shapeObj.points[4].x,
+                    shapeObj.points[4].y,
+                    options.strokeWidth
+                );
             }
 
             shapeObj.set(options);
@@ -401,11 +411,11 @@ class Shape extends Component {
             }
 
             this.add(this._type, data).then(objectProps => {
-                this.fire(eventNames.ADD_OBJECT_AFTER, objectProps);
+                this.fire(eventNames.ADD_OBJECT, objectProps);
             });
         } else if (shape) {
             resizeHelper.adjustOriginToCenter(shape);
-            this.fire(eventNames.ADD_OBJECT_AFTER, this.graphics.createObjectProperties(shape));
+            this.fire(eventNames.ADD_OBJECT, this.graphics.createObjectProperties(shape));
         }
 
         canvas.off({
@@ -444,24 +454,14 @@ class Shape extends Component {
         }
     }
 
-    /**
-     * Create an Arrow shape using Polyline 
-     * @param {object} fromx - Starting X Coordinate
-     * @param {object} fromy - Starting Y Coordinate
-     * @param {object} tox - Ending X Coordinate
-     * @param {object} toy - Ending Y Coordinate
-     * @param {object} options - Arrow options
-     * @returns {fabric.Polyline} Fabric Polyline
-     * @private
-     */
-    _createArrow(fromx, fromy, tox, toy, options) {
+    _createArrowPoints(fromx, fromy, tox, toy, headlen) {
         const angle = Math.atan2(toy - fromy, tox - fromx);
-        const headlen = 15;
+
         // bring the line end back some to account for arrow head.
         tox = tox - (headlen * Math.cos(angle));
         toy = toy - (headlen * Math.sin(angle));
-        // calculate the points.
-        const points = [
+
+        return [
             {
                 x: fromx,
                 y: fromy
@@ -490,9 +490,45 @@ class Shape extends Component {
                 x: fromx,
                 y: fromy
             }
+            /* {
+                x: fromx,
+                y: fromy
+            }, {
+                x: tox,
+                y: toy
+            }, {
+                x: tox - ((headlen) * (Math.cos(angle - (Math.PI / 2)))),
+                y: toy - ((headlen) * (Math.sin(angle - (Math.PI / 2))))
+            }, {
+                x: tox + ((headlen) * Math.cos(angle)),
+                y: toy + ((headlen) * Math.sin(angle))
+            }, {
+                x: tox - ((headlen) * (Math.cos(angle + (Math.PI / 2)))),
+                y: toy - ((headlen) * (Math.sin(angle + (Math.PI / 2))))
+            }, {
+                x: tox,
+                y: toy
+            }, {
+                x: fromx,
+                y: fromy
+            }*/
         ];
-        const pline = new fabric.Polyline(points, options);
+    }
 
+    /**
+     * Create an Arrow shape using Polyline 
+     * @param {object} fromx - Starting X Coordinate
+     * @param {object} fromy - Starting Y Coordinate
+     * @param {object} tox - Ending X Coordinate
+     * @param {object} toy - Ending Y Coordinate
+     * @param {object} options - Arrow options
+     * @returns {fabric.Polyline} Fabric Polyline
+     * @private
+     */
+    _createArrow(fromx, fromy, tox, toy, options) {
+        // calculate the points.
+        const points = this._createArrowPoints(fromx, fromy, tox, toy, options.strokeWidth);
+        const pline = new fabric.Polygon(points, options);
         return pline;
     }
 }

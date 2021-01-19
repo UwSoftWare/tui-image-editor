@@ -30,6 +30,8 @@ const command = {
      * @returns {Promise}
      */
     execute(graphics, type, options) {
+        // eslint-disable-next-line no-console
+        console.log(options);
         const shapeComp = graphics.getComponent(SHAPE);
 
         return shapeComp.add(type, options).then(objectProps => {

@@ -312,6 +312,7 @@ export default {
                 if (this.activeObjectId) {
                     this.changeShape(this.activeObjectId, changeShapeObject, isSilent);
                 }
+                this.setDrawingShape(this.ui.shape.type, this.ui.shape.options);
             },
             setDrawingShape: shapeType => {
                 this.setDrawingShape(shapeType);
@@ -475,15 +476,15 @@ export default {
                 } = this.ui.text;
                 const fontFamily = 'Noto Sans';
 
-                this.addText('Double Click', {
+                this.addText('', {
                     position: pos.originPosition,
                     styles: {fill, fontSize, fontFamily, fontStyle, fontWeight, underline}
                 }).then(() => {
                     this.changeCursor('default');
                 });
             },
-            addObjectAfter: obj => {
-                if (['rect', 'circle', 'triangle', 'arrow', 'polyline'].indexOf(obj.type) > -1) {
+            addObject: obj => {
+                if (['rect', 'circle', 'triangle', 'arrow', 'polyline', 'polygon'].indexOf(obj.type) > -1) {
                     this.ui.shape.setMaxStrokeValue(Math.min(obj.width, obj.height));
                 }
             },

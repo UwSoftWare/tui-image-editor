@@ -465,6 +465,9 @@ class Graphics {
      * @returns {string} A DOMString containing the requested data URI.
      */
     toDataURL(options) {
+        const zoom = this.getComponent(components.ZOOM);
+        zoom.setZoomValue(1.0);
+
         const cropper = this.getComponent(components.CROPPER);
         cropper.changeVisibility(false);
 
@@ -529,7 +532,7 @@ class Graphics {
         this.renderAll();
 
         // eslint-disable-next-line no-console
-        console.log(width, height, zoom, percentUpW, percentUpH);
+        console.log(width, height, zoom, percentUpW, percentUpH, maxDimension);
     }
 
     /**
@@ -954,8 +957,8 @@ class Graphics {
         const wScaleFactor = this.cssMaxWidth / width * zoomValue;
         const hScaleFactor = this.cssMaxHeight / height * zoomValue;
 
-        let cssMaxWidth = width;
-        let cssMaxHeight = height;
+        let cssMaxWidth = width * zoomValue;
+        let cssMaxHeight = height * zoomValue;
 
         if (wScaleFactor < 1 && wScaleFactor < hScaleFactor) {
             cssMaxWidth = width * wScaleFactor;

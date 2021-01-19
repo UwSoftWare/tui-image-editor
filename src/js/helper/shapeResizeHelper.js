@@ -23,6 +23,10 @@ const DIMENSION_KEYS = {
     polyline: {
         w: 'width',
         h: 'height'
+    },
+    polygon: {
+        w: 'width',
+        h: 'height'
     }
 };
 
@@ -123,7 +127,7 @@ function adjustDimensionOnScaling(shape) {
     const dimensionKeys = DIMENSION_KEYS[type];
     let width = shape[dimensionKeys.w] * scaleX;
     let height = shape[dimensionKeys.h] * scaleY;
-    const isArrow = !!(shape.type === 'polyline');
+    const isArrow = !!(shape.type === 'polyline' || shape.type === 'polygon');
     if (!isArrow) {
         if (shape.isRegular) {
             const maxScale = Math.max(scaleX, scaleY);

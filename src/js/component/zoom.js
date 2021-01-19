@@ -133,9 +133,16 @@ class Zoom extends Component {
             canvas.isDragging = true;
             canvas.selection = false;
 
-            const pointer = canvas.getPointer(fEvent.e);
-            canvas.lastPosX = pointer.x;
-            canvas.lastPosY = pointer.y;
+            canvas.lastPosX = fEvent.e.clientX;
+            if (fEvent.e.touches && fEvent.e.touches[0] && fEvent.e.touches[0].clientX) {
+                canvas.lastPosX = fEvent.e.touches[0].clientX;
+            }
+            canvas.lastPosY = fEvent.e.clientY;
+            if (fEvent.e.touches && fEvent.e.touches[0] && fEvent.e.touches[0].clientY) {
+                canvas.lastPosY = fEvent.e.touches[0].clientY;
+            }
+            canvas.lastT4 = canvas.viewportTransform[4];
+            canvas.lastT5 = canvas.viewportTransform[5];
             canvas.on({
                 'mouse:move': this._listeners.mousemove,
                 'mouse:up': this._listeners.mouseup
@@ -152,25 +159,28 @@ class Zoom extends Component {
     _onFabricMouseMove(fEvent) {
         const canvas = this.getCanvas();
         if (canvas.isDragging) {
-            const pointer = canvas.getPointer(fEvent.e);
-            const diffX = (pointer.x - canvas.lastPosX);
-            if (canvas.vptCoords.br.x < canvas.width || diffX > 0) {
-                canvas.viewportTransform[4] += diffX;
+            let {clientX, clientY} = fEvent.e;
+            if (fEvent.e.touches && fEvent.e.touches[0] && fEvent.e.touches[0].clientX) {
+                clientX = fEvent.e.touches[0].clientX;
             }
+            if (fEvent.e.touches && fEvent.e.touches[0] && fEvent.e.touches[0].clientY) {
+                clientY = fEvent.e.touches[0].clientY;
+            }
+            const diffX = (clientX - canvas.lastPosX);
+            canvas.viewportTransform[4] = canvas.lastT4 + diffX;
             if (canvas.viewportTransform[4] >= 0) {
                 canvas.viewportTransform[4] = 0;
             }
-            const diffY = (pointer.y - canvas.lastPosY);
-            if (canvas.vptCoords.br.y < canvas.height || diffY > 0) {
-                canvas.viewportTransform[5] += diffY;
-            }
+            const diffY = (clientY - canvas.lastPosY);
+            canvas.viewportTransform[5] = canvas.lastT5 + diffY;
             if (canvas.viewportTransform[5] >= 0) {
                 canvas.viewportTransform[5] = 0;
             }
             this._didPan = true;
             canvas.renderAll();
-            canvas.lastPosX = pointer.x;
-            canvas.lastPosY = pointer.y;
+
+            // eslint-disable-next-line no-console
+            console.log(fEvent.e, diffX, diffY, canvas.viewportTransform, canvas.lastT4, canvas.lastT5);
         }
     }
 
