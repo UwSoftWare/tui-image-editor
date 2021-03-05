@@ -332,7 +332,13 @@ export default {
                 if (cropRect) {
                     this.crop(cropRect).then(() => {
                         this.stopDrawingMode();
-                        this.ui.resizeEditor();
+                        /* eslint-disable */
+                        this.ui.resizeEditor({imageSize: {
+                            oldWidth: this.ui.imageSize.newWidth,
+                            oldHeight: this.ui.imageSize.newHeight,
+                            newWidth: cropRect.width,
+                            newHeight: cropRect.height
+                        }});
                         this.ui.changeMenu('crop');
                     })['catch'](message => (
                         Promise.reject(message)
