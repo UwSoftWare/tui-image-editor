@@ -144,11 +144,6 @@ const {
  */
 class ImageEditor {
     constructor(wrapper, options) {
-        /* eslint-disable */
-        window.addEventListener('error', function() {
-            alert('errrrrorrrr');
-        });
-
         options = snippet.extend({
             includeUI: false,
             usageStatistics: true

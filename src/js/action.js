@@ -288,6 +288,10 @@ export default {
      */
     _rotateAction() {
         return extend({
+            setZoomValue: value => {
+                this.setZoom(value);
+                this.ui.resizeEditor();
+            },
             rotate: (angle, isSilent) => {
                 this.rotate(angle, isSilent);
                 this.ui.resizeEditor();
@@ -328,11 +332,9 @@ export default {
     _cropAction() {
         return extend({
             crop: () => {
-                alert('here');
                 const cropRect = this.getCropzoneRect();
                 if (cropRect) {
                     this.crop(cropRect).then(() => {
-                        alert(33);
                         this.stopDrawingMode();
 
                         this.ui.resizeEditor({imageSize: {
@@ -344,10 +346,8 @@ export default {
 
                         setTimeout(() => {
                             this.ui.zoom.actions.setZoomValue(1.0);
-                            alert('pp');
-                        }, 5000);
+                        }, 0);
 
-                        alert('jj');
                         this.ui.changeMenu('crop');
                     })['catch'](message => (
                         Promise.reject(message)

@@ -75,7 +75,6 @@ class ImageLoader extends Component {
                 if (oImage && oImage.getElement()) {
                     resolve(oImage);
                 } else {
-                    alert('herE?');
                     reject(rejectMessages.loadingImageFailed);
                 }
             }, imageOption);

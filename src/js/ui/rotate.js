@@ -34,6 +34,13 @@ class Rotate extends Submenu {
     }
 
     /**
+     * Executed when the menu starts.
+     */
+    changeStartMode() {
+        this.actions.setZoomValue(1.0);
+    }
+
+    /**
      * Destroys the instance.
      */
     destroy() {
