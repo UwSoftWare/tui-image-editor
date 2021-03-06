@@ -339,6 +339,16 @@ export default {
                             newWidth: cropRect.width,
                             newHeight: cropRect.height
                         }});
+
+                        setTimeout(() => {
+                            this.ui.resizeEditor({imageSize: {
+                                oldWidth: this.ui.imageSize.newWidth,
+                                oldHeight: this.ui.imageSize.newHeight,
+                                newWidth: cropRect.width,
+                                newHeight: cropRect.height
+                            }});
+                        }, 5000);
+
                         this.ui.changeMenu('crop');
                     })['catch'](message => (
                         Promise.reject(message)

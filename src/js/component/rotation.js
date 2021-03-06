@@ -40,6 +40,9 @@ class Rotation extends Component {
      * @returns {Promise}
      */
     setAngle(angle) {
+        const zoom = this.graphics.getComponent(componentNames.ZOOM);
+        zoom.setZoomValue(1.0);
+
         const oldAngle = this.getCurrentAngle() % 360; // The angle is lower than 2*PI(===360 degrees)
 
         angle %= 360;
