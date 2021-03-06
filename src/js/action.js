@@ -332,7 +332,6 @@ export default {
                 if (cropRect) {
                     this.crop(cropRect).then(() => {
                         this.stopDrawingMode();
-                        /* eslint-disable */
                         this.ui.resizeEditor({imageSize: {
                             oldWidth: this.ui.imageSize.newWidth,
                             oldHeight: this.ui.imageSize.newHeight,
@@ -341,6 +340,8 @@ export default {
                         }});
 
                         setTimeout(() => {
+                            /* eslint-disable */
+                            alert(55);
                             this.ui.resizeEditor({imageSize: {
                                 oldWidth: this.ui.imageSize.newWidth,
                                 oldHeight: this.ui.imageSize.newHeight,
