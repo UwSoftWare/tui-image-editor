@@ -342,7 +342,11 @@ export default {
                             newHeight: cropRect.height
                         }});
 
-                        this.ui.zoom.actions.setZoomValue(1.0);
+                        setTimeout(() => {
+                            this.ui.zoom.actions.setZoomValue(1.0);
+                            alert('pp');
+                        }, 5000);
+
                         alert('jj');
                         this.ui.changeMenu('crop');
                     })['catch'](message => (
