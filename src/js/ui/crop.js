@@ -74,11 +74,7 @@ class Crop extends Submenu {
     }
 
     _applyEventHandler() {
-        this.actions.crop().then(() => {
-            this.actions.setZoomValue(1.0);
-            alert(66);
-        });
-
+        this.actions.crop();
         this._els.apply.classList.remove('active');
     }
 

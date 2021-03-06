@@ -328,10 +328,13 @@ export default {
     _cropAction() {
         return extend({
             crop: () => {
+                alert('here');
                 const cropRect = this.getCropzoneRect();
                 if (cropRect) {
                     this.crop(cropRect).then(() => {
+                        alert(33);
                         this.stopDrawingMode();
+
                         this.ui.resizeEditor({imageSize: {
                             oldWidth: this.ui.imageSize.newWidth,
                             oldHeight: this.ui.imageSize.newHeight,
@@ -339,7 +342,7 @@ export default {
                             newHeight: cropRect.height
                         }});
 
-                        this.setZoomValue(1.0);
+                        this.ui.zoom.actions.setZoomValue(1.0);
                         alert('jj');
                         this.ui.changeMenu('crop');
                     })['catch'](message => (
