@@ -339,17 +339,8 @@ export default {
                             newHeight: cropRect.height
                         }});
 
-                        setTimeout(() => {
-                            /* eslint-disable */
-                            alert(55);
-                            this.ui.resizeEditor({imageSize: {
-                                oldWidth: this.ui.imageSize.newWidth,
-                                oldHeight: this.ui.imageSize.newHeight,
-                                newWidth: cropRect.width,
-                                newHeight: cropRect.height
-                            }});
-                        }, 5000);
-
+                        this.setZoomValue(1.0);
+                        alert('jj');
                         this.ui.changeMenu('crop');
                     })['catch'](message => (
                         Promise.reject(message)
