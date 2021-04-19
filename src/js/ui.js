@@ -16,6 +16,7 @@ import Draw from './ui/draw';
 import Filter from './ui/filter';
 import Locale from './ui/locale/locale';
 import Zoom from './ui/zoom';
+import Blur from './ui/blur';
 
 const SUB_UI_COMPONENT = {
     Shape,
@@ -27,7 +28,8 @@ const SUB_UI_COMPONENT = {
     Icon,
     Draw,
     Filter,
-    Zoom
+    Zoom,
+    Blur
 };
 
 const BI_EXPRESSION_MINSIZE_WHEN_TOP_POSITION = '1300';
@@ -187,7 +189,7 @@ class Ui {
             },
             locale: {},
             menuIconPath: '',
-            menu: ['crop', 'flip', 'rotate', 'draw', 'shape', 'icon', 'text', 'mask', 'filter', 'zoom'],
+            menu: ['crop', 'flip', 'rotate', 'draw', 'shape', 'icon', 'text', 'mask', 'filter', 'zoom', 'blur'],
             initMenu: '',
             uiSize: {
                 width: '100%',
@@ -622,8 +624,8 @@ class Ui {
      * @param {string} menuBarPosition - top or right or bottom or left
      * @private
      */
-    _setEditorPosition(menuBarPosition) { // eslint-disable-line complexity
-        const {width, height} = this._getCanvasMaxDimension();
+    _setEditorPosition() { // eslint-disable-line complexity
+        /* const {width, height} = this._getCanvasMaxDimension();
         const editorElementStyle = this._editorElement.style;
         let top = 0;
         let left = 0;
@@ -656,7 +658,7 @@ class Ui {
             }
         }
         editorElementStyle.top = `${top}px`;
-        editorElementStyle.left = `${left}px`;
+        editorElementStyle.left = `${left}px`;*/
     }
 }
 

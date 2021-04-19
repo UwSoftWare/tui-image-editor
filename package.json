@@ -76,12 +76,15 @@
     "test": "karma start --no-single-run",
     "test:ne": "KARMA_SERVER=ne karma start",
     "test:types": "tsc --project test/types",
-    "bundle": "webpack && webpack -p && npm run bundle:svg && node tsBannerGenerator.js",
+    "bundle": "webpack && webpack -p",
+    "bundleAll": "webpack && webpack -p && npm run bundle:svg && node tsBannerGenerator.js",
     "bundle:svg": "node makesvg.js",
     "serve": "webpack-dev-server",
     "doc:dev": "tuidoc --dev",
     "doc": "tuidoc",
-    "tslint": "tslint index.d.ts"
+    "tslint": "tslint index.d.ts",
+    "copy": "cp dist/* ../firio/node_modules/tui-image-editor/dist/ -r",
+    "start": "cd ../firio && npm run start"
   },
   "dependencies": {
     "core-js": "2.4.1",

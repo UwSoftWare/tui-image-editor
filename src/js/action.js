@@ -21,7 +21,8 @@ export default {
             draw: this._drawAction(),
             icon: this._iconAction(),
             filter: this._filterAction(),
-            zoom: this._zoomAction()
+            zoom: this._zoomAction(),
+            blur: this._blurAction()
         };
     },
 
@@ -240,6 +241,20 @@ export default {
                 this.setBrush({
                     color
                 });
+            }
+        }, this._commonAction());
+    },
+
+    /**
+     * Blur Action
+     * @returns {Object} actions for ui blur
+     * @private
+     */
+    _blurAction() {
+        return extend({
+            setBlurMode: settings => {
+                this.stopDrawingMode();
+                this.startDrawingMode('BLUR', settings);
             }
         }, this._commonAction());
     },

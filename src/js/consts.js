@@ -52,7 +52,8 @@ module.exports = {
         'FILTER',
         'SHAPE',
         'ZOOM',
-        'RESIZE'
+        'RESIZE',
+        'BLUR'
     ),
 
     /**
@@ -122,7 +123,8 @@ module.exports = {
         'FREE_DRAWING',
         'LINE_DRAWING',
         'TEXT',
-        'SHAPE'
+        'SHAPE',
+        'BLUR'
     ),
 
     /**
@@ -206,6 +208,12 @@ module.exports = {
         min: 5,
         max: 30,
         value: 12
+    },
+
+    defaultBlurRangeValus: {
+        min: 5,
+        max: 500,
+        value: 250
     },
 
     defaultShapeStrokeValus: {

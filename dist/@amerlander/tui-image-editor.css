@@ -319,6 +319,7 @@ body > textarea {
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-mask .tui-image-editor-submenu > div.tui-image-editor-menu-mask,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-icon .tui-image-editor-submenu > div.tui-image-editor-menu-icon,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-draw .tui-image-editor-submenu > div.tui-image-editor-menu-draw,
+.tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-blur .tui-image-editor-submenu > div.tui-image-editor-menu-blur,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-filter .tui-image-editor-submenu > div.tui-image-editor-menu-filter {
   display: table-cell;
 }
@@ -331,6 +332,7 @@ body > textarea {
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-mask .tui-image-editor-submenu,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-icon .tui-image-editor-submenu,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-draw .tui-image-editor-submenu,
+.tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-blur .tui-image-editor-submenu,
 .tui-image-editor-container .tui-image-editor-main.tui-image-editor-menu-filter .tui-image-editor-submenu {
   display: table;
 }

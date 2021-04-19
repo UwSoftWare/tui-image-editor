@@ -17,11 +17,13 @@ import Filter from './component/filter';
 import Shape from './component/shape';
 import Zoom from './component/zoom';
 import Resize from './component/resize';
+import Blur from './component/blur';
 import CropperDrawingMode from './drawingMode/cropper';
 import FreeDrawingMode from './drawingMode/freeDrawing';
 import LineDrawingMode from './drawingMode/lineDrawing';
 import ShapeDrawingMode from './drawingMode/shape';
 import TextDrawingMode from './drawingMode/text';
+import BlurDrawingMode from './drawingMode/blur';
 import consts from './consts';
 import util from './util';
 
@@ -901,6 +903,7 @@ class Graphics {
         this._register(this._drawingModeMap, new LineDrawingMode());
         this._register(this._drawingModeMap, new ShapeDrawingMode());
         this._register(this._drawingModeMap, new TextDrawingMode());
+        this._register(this._drawingModeMap, new BlurDrawingMode());
     }
 
     /**
@@ -920,6 +923,7 @@ class Graphics {
         this._register(this._componentMap, new Shape(this));
         this._register(this._componentMap, new Zoom(this));
         this._register(this._componentMap, new Resize(this));
+        this._register(this._componentMap, new Blur(this));
     }
 
     /**
